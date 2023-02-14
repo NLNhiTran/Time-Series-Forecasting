@@ -1,0 +1,86 @@
+---
+title: "Avacado"
+output: html_notebook
+---
+
+
+```{r}
+
+# Loading the needed libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(DAAG)
+library(lsr)
+library(ggplot2)
+library(lubridate)
+library(hrbrthemes)
+```
+
+
+```{r}
+
+# Load data
+data = read.csv("avocados.csv")
+data
+```
+
+```{r}
+
+# Convert date column to data type date
+data <- data %>% 
+  mutate(date = as.Date(data$date, format = "%Y-%m-%d"))
+data
+```
+
+```{r}
+
+# Functions to get some information about the data
+summary(data)
+```
+
+The Avocado dataset has been analyzed in R. It has 33045 observations/rows and 13 variables/ columns. The columns are:
+* date: this column shows the date on which the avocados are sold
+* average_price: which 
+* ... <list other columns>
+
+
+The dataset contains data from the 4th of January 2015 until the 20th of November 2020. 
+
+
+
+```{r}
+
+# Information about the columns and insight to first entries
+str(data)
+```
+
+
+```{r}
+
+# Annual sales per type per year
+annual_sales <- data.frame(data %>% 
+  group_by(year, type) %>%
+  summarize(total = sum(total_volume)))
+annual_sales
+
+# GGplot
+ggplot(annual_sales, aes(x = year, y = total, fill = type)) + 
+  geom_bar(stat="identity") +
+  scale_fill_manual(values = c("#69b3a2","#CE8243")) +
+  xlab("year") +
+  ylab("total sales") + 
+  ggtitle("Hass avocado sales per year in the US") +
+    theme_ipsum(grid = x, axis_text_size = 11, axis_title_size = 12)
+```
+
+
+FILTER IF QUESTIONS/ NEEDED:
+```{r}
+
+# Filter
+filter(data, geography == "Albany")
+filter(data, type == "conventional")
+filter(data, type == "organic")
+```
+
